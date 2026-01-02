@@ -1,12 +1,16 @@
 {
-  "name": "@gpt/model",
-  "version": "0.0.1",
+  "name": "gpt-clone",
   "author": "Gabriel Cassim",
-  "main": "./index.ts",
-  "files": [
-    "src/**"
+  "workspaces": [
+    "gpt",
+    "playground-node"
   ],
-  "dependencies": {
-    "@tensorflow/tfjs": "4.22.0"
+  "scripts": {
+    "build": "npm run build --workspaces --if-present",
+    "playground-node": "npm run start -w @playground/node"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
   }
 }

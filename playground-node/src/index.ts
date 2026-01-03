@@ -8,15 +8,15 @@ async function start() {
   const textSourceURL = 'https://raw.githubusercontent.com/trekhleb/homemade-gpt-js/refs/heads/main/playground-web/public/dataset-tinyshakespeare.txt'
   const dataset = await CharDataset({ textSourceURL })
 
-  const batchSize = 96
-  const blockSize = 96
-  const maxIters = 21600
+  const batchSize = 16
+  const blockSize = 16
+  const maxIters = 3600
   const evalInterval = 50
   const evalIterations = 50
   const learningRate = 1e-3
 
   const model = GPT({
-    ...CONFIG['openai-gpt'],
+    ...CONFIG['gpt-mini'],
     blockSize,
     vocabSize: dataset.vocabSize,
   })

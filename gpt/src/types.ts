@@ -7,7 +7,7 @@ export type ModelParams = {
     // The nLayer (number of layers),
     // nHead (number of heads),
     // nEmbd (embeddings) must be given via model config or modelVariant.
-    
+
     nLayer: number;
     nHead: number; // Requirement: nEmbd % nHead === 0
     nEmbd: number; // Requirement: nEmbd % nHead === 0
@@ -57,13 +57,13 @@ export type Model = {
      */
 
     generate: (
-        args: { 
-            idx: tf.Tensor; 
-            maxNewTokens: number;  
+        args: {
+            idx: tf.Tensor;
+            maxNewTokens: number;
             temperature?: number;
             doSample: boolean;
             topK?: number;
-        }, 
+        },
         onGenerateChar?: (token: number) => void
     ) => Promise<tf.Tensor>;
     loss: (x: tf.Tensor, y: tf.Tensor) => tf.Tensor;
@@ -86,6 +86,7 @@ export type DatasetParams = {
     textSource?: string;
     textSourceURL?: string;
     maskZero?: boolean;
+    tokenizerName?: string;
 };
 
 export type DatasetGetBatchParams = {
@@ -102,8 +103,8 @@ export type Dataset = {
     vocabulary: string[];
     text: string;
     getBatch: (args: DatasetGetBatchParams) => { x: tf.Tensor; y: tf.Tensor };
-    encode: (s: string) => number[];
-    decode: (a: number[]) => string;
+    encode: (s: string) => number[] | Promise<number[]>;
+    decode: (a: number[]) => string | Promise<string>;
     dispose: () => void;
 };
 
@@ -127,10 +128,10 @@ export type TrainingParams = {
 };
 
 export type TrainingCallbacks = {
-    onEval: (params: { 
+    onEval: (params: {
         step: number;
         trainLoss?: number;
-        testLoss?: number; 
+        testLoss?: number;
     }) => void;
     isStopRequested?: () => boolean;
 };

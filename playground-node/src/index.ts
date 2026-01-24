@@ -9,11 +9,11 @@ async function start() {
   const dataset = await HFDataset({ textSourceURL })
 
   const batchSize = 16
-  const blockSize = 32
-  const maxIters = 3600
-  const evalInterval = 10
+  const blockSize = 16
+  const maxIters = 2800
+  const evalInterval = 200
   const evalIterations = 10
-  const learningRate = 1e-3
+  const learningRate = 7e-4
 
   const model = GPT({
     ...CONFIG['gpt-mini'],

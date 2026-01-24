@@ -1,3 +1,10 @@
 node_modules
 build
+dist
 .DS_Store
+*.log
+.env
+
+# Generated models
+models/
+*/models/

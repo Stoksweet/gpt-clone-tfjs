@@ -1,0 +1,13 @@
+node_modules
+.git
+.gitignore
+.dockerignore
+Dockerfile
+run-docker.sh
+README.md
+build
+dist
+models
+*/models
+.DS_Store
+*.log

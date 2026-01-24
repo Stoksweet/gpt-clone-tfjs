@@ -8,7 +8,7 @@
  * - https://github.com/karpathy/minGPT
  */
 
-import * as tf from '@tensorflow/tfjs';
+import * as tf from '@tensorflow/tfjs-node-gpu';
 import { Dataset, Model, TrainingCallbacks, TrainingParams } from './types';
 
 export function Trainer(
@@ -23,16 +23,16 @@ export function Trainer(
     const { evalIterations, learningRate, evalInterval, maxIters, batchSize, blockSize } = params;
 
     const train = async () => {
-        const optimizer = model.optimizer({learningRate});
+        const optimizer = model.optimizer({ learningRate });
 
         const estimateLoss = () => tf.tidy(() => {
             const result: { train?: tf.Tensor; test?: tf.Tensor } = {};
             for (const split of ['train', 'test'] as ('train' | 'test')[]) {
                 // Creates a Tensor with value [0]. This will act as a running sum of losses
                 let losses = tf.zeros([1]); // losses = 0 (in tf form)
-                
+
                 // This loop does not train, it only measures loss.
-                for (let iter = 0; iter < evalIterations; iter++) { 
+                for (let iter = 0; iter < evalIterations; iter++) {
                     // Sample a batch from the dataset. Each iteration uses a different random batch, not the same data.
                     const { x, y } = dataset.getBatch({ split, batchSize, blockSize });
                     // Compute loss for the batch. Forward pass only, no back propagation, returns a Tensor scalar

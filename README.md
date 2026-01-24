@@ -61,3 +61,40 @@ const dataset = await HFDataset({
     tokenizerName: 'Xenova/bert-base-uncased' 
 });
 ```
+
+## Docker Support (GPU)
+
+To train the model using Docker with GPU support (CUDA 11.2 / cuDNN 8.1), you can use the provided Dockerfile and helper script.
+
+### Prerequisites
+- Docker
+- NVIDIA GPU Driver
+- NVIDIA Container Toolkit (allows `docker run --gpus all`)
+
+### Quick Start
+
+1. **Build and entering the container:**
+
+   You can use the helper script:
+   ```bash
+   ./run-docker.sh
+   ```
+
+   Or run manually:
+   ```bash
+   docker build -t gpt-clone-trainer .
+   docker run --gpus all -it --rm -v $(pwd):/app -w /app gpt-clone-trainer bash
+   ```
+
+2. **Inside the container:**
+
+   If your local `node_modules` are not present or meaningful for the Linux environment, install them:
+   ```bash
+   npm install
+   ```
+
+   Then run the training:
+   ```bash
+   npm run playground-node
+   ```
+

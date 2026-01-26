@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GPT Lab - Web Inference</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">OI</div>
+      <span style="font-weight: 600;">Open WebUI</span>
+    </div>
+
+    <nav>
+      <a href="#" class="nav-item"><span>+</span> New Chat</a>
+      <a href="#" class="nav-item">🔍 Search</a>
+      <a href="#" class="nav-item">📝 Notes</a>
+      <a href="#" class="nav-item">🏢 Workspace</a>
+    </nav>
+
+    <div style="margin-top: auto; padding-top: 1rem; border-top: 1px solid var(--border-color);">
+      <div class="nav-item">📁 Folders</div>
+      <div class="nav-item" style="padding-left: 1.5rem; font-size: 0.8rem; color: var(--text-secondary);"># general
+      </div>
+      <div class="nav-item" style="padding-left: 1.5rem; font-size: 0.8rem; color: var(--text-secondary);">📗 Finance
+      </div>
+      <div class="nav-item" style="padding-left: 1.5rem; font-size: 0.8rem; color: var(--text-secondary);">📕 Study
+      </div>
+    </div>
+  </aside>
+
+  <main class="main-container">
+    <header class="header">
+      <div class="model-selector" id="modelSelector">
+        <span id="currentModelName">Select a model</span>
+        <span style="font-size: 0.8rem; opacity: 0.5;">▼</span>
+      </div>
+      <div style="display: flex; gap: 1rem; align-items: center;">
+        <div id="statusIndicator" style="font-size: 0.75rem; color: var(--text-secondary);">Ready</div>
+        <button class="action-btn" id="settingsBtn" title="Inference Settings">⚙️</button>
+        <div class="sidebar-logo" style="width: 32px; height: 32px; background: #c2410c; color: white;">TB</div>
+      </div>
+    </header>
+
+    <div class="chat-area" id="chatArea">
+      <div class="chat-welcome" id="welcomeView">
+        <div class="welcome-logo">🧠</div>
+        <h1 class="welcome-title" id="welcomeModelTitle">GPT Neural Lab</h1>
+
+        <div class="suggested">
+          <div class="suggested-card" onclick="setPrompt('Show me a code snippet of a website\'s sticky header')">
+            <p class="suggested-title">Show me a code snippet</p>
+            <p class="suggested-desc">of a website's sticky header</p>
+          </div>
+          <div class="suggested-card" onclick="setPrompt('Help me study vocabulary for a college entrance exam')">
+            <p class="suggested-title">Help me study</p>
+            <p class="suggested-desc">vocabulary for an exam</p>
+          </div>
+          <div class="suggested-card" onclick="setPrompt('Overcome procrastination')">
+            <p class="suggested-title">Overcome procrastination</p>
+            <p class="suggested-desc">give me tips</p>
+          </div>
+          <div class="suggested-card" onclick="setPrompt('Explain quantum physics to a five year old')">
+            <p class="suggested-title">Explain things</p>
+            <p class="suggested-desc">complex topics simplified</p>
+          </div>
+        </div>
+      </div>
+      <!-- Messages will appear here -->
+      <div id="messagesContainer" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
+      </div>
+    </div>
+
+    <div class="input-container">
+      <div class="input-box-wrapper">
+        <textarea id="userInput" placeholder="How can I help you today?" rows="1"></textarea>
+        <div class="input-actions">
+          <div style="display: flex; gap: 0.5rem;">
+            <button class="action-btn">📎</button>
+            <button class="action-btn">🌐</button>
+          </div>
+          <div style="display: flex; gap: 0.75rem; align-items: center;">
+            <button class="action-btn">🎤</button>
+            <div class="send-btn" id="sendBtn">↑</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Model Selection Modal (existing) -->
+  <div id="modelModal"
+    style="display:none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 100; justify-content: center; align-items: center;">
+    <div
+      style="background: var(--bg-sidebar); border: 1px solid var(--border-color); border-radius: 1rem; width: 400px; padding: 1.5rem;">
+      <h3 style="margin-bottom: 1.5rem;">Select Model</h3>
+      <div id="modelList"
+        style="display: flex; flex-direction: column; gap: 0.5rem; max-height: 400px; overflow-y: auto;">
+        <!-- Models will be listed here -->
+      </div>
+      <button onclick="closeModal()"
+        style="margin-top: 1.5rem; width: 100%; padding: 0.75rem; border-radius: 0.5rem; background: var(--input-bg); border: none; color: white; cursor: pointer;">Close</button>
+    </div>
+  </div>
+
+  <!-- Inference Settings Side Panel -->
+  <div id="settingsPanel"
+    style="display:none; position: fixed; top: 0; right: 0; bottom: 0; width: 300px; background: var(--bg-sidebar); border-left: 1px solid var(--border-color); z-index: 90; padding: 1.5rem; flex-direction: column; gap: 1.5rem; box-shadow: -4px 0 10px rgba(0,0,0,0.3);">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <h3 style="font-size: 1.1rem;">Inference Settings</h3>
+      <button class="action-btn" onclick="toggleSettings()">✕</button>
+    </div>
+
+    <div class="setting-group">
+      <label style="display: block; font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.5rem;">Max
+        Tokens</label>
+      <input type="number" id="paramMaxTokens" value="200" min="1" max="1024"
+        style="width: 100%; padding: 0.5rem; border-radius: 0.4rem; background: var(--input-bg); border: 1px solid var(--border-color); color: white;">
+    </div>
+
+    <div class="setting-group">
+      <label
+        style="display: block; font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.5rem;">Temperature</label>
+      <div style="display:flex; gap: 10px; align-items:center;">
+        <input type="range" id="paramTemperature" value="0.8" min="0" max="2" step="0.1" style="flex:1;">
+        <span id="valTemperature" style="font-size: 0.8rem; width: 25px;">0.8</span>
+      </div>
+    </div>
+
+    <div class="setting-group">
+      <label
+        style="display: block; font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.5rem;">Top-K</label>
+      <input type="number" id="paramTopK" value="40" min="0"
+        style="width: 100%; padding: 0.5rem; border-radius: 0.4rem; background: var(--input-bg); border: 1px solid var(--border-color); color: white;">
+      <small style="font-size: 0.7rem; color: var(--text-secondary); display: block; margin-top: 0.25rem;">0 to
+        disable</small>
+    </div>
+
+    <div class="setting-group" style="display:flex; justify-content: space-between; align-items:center;">
+      <label style="font-size: 0.8rem; color: var(--text-secondary);">Enable Sampling</label>
+      <input type="checkbox" id="paramDoSample" checked>
+    </div>
+
+    <div class="setting-group">
+      <label
+        style="display: block; font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.5rem;">Tokenizer</label>
+      <select id="paramTokenizer"
+        style="width: 100%; padding: 0.5rem; border-radius: 0.4rem; background: var(--input-bg); border: 1px solid var(--border-color); color: white;">
+        <option value="hf">HuggingFace (GPT-2)</option>
+        <option value="char">Character-level</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Framework Dependencies (CDN for simplicity in Vanilla setup) -->
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.17.0/dist/tf.min.js"></script>
+  <script type="module" src="app.js"></script>
+</body>
+
+</html>

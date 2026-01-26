@@ -49,6 +49,25 @@ The training script automatically saves the model weights and configuration to t
 - `weights`: The trained parameters of the model.
 - `date`: Timestamp of the save.
 
+### Model Inference & Testing
+
+To test your trained models with an interactive chat interface:
+
+```bash
+cd playground-node
+npm run inference
+```
+
+This provides an interactive CLI where you can:
+- Select from available trained models
+- Configure generation parameters (temperature, top-K, etc.)
+- Test the model with different prompts
+- Monitor TensorFlow.js memory usage
+- Benchmark inference performance
+
+See [`playground-node/INFERENCE.md`](./playground-node/INFERENCE.md) for detailed documentation.
+
+
 ## Advanced
 
 ### Subword Tokenization

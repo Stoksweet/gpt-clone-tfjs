@@ -5,12 +5,12 @@ async function start() {
   const backend = tf.getBackend()
   console.log(`Current backend: ${backend}`)
 
-  const textSourceURL = 'https://raw.githubusercontent.com/trekhleb/homemade-gpt-js/refs/heads/main/playground-web/public/dataset-tinyshakespeare.txt'
+  const textSourceURL = 'https://raw.githubusercontent.com/Stoksweet/gpt-clone-tfjs/refs/heads/main/datasets/english-dictionary.txt'
   const dataset = await HFDataset({ textSourceURL })
 
   const batchSize = 16
   const blockSize = 16
-  const maxIters = 2800
+  const maxIters = 5600
   const evalInterval = 200
   const evalIterations = 10
   const learningRate = 7e-4
